@@ -1,0 +1,71 @@
+D. Caesar's Legions
+time limit per test2 seconds
+memory limit per test256 megabytes
+inputstandard input
+outputstandard output
+Gaius Julius Caesar, a famous general, loved to line up his soldiers. Overall the army had n 1 footmen and n 2 horsemen. Caesar thought that an arrangement is not beautiful if somewhere in the line there are strictly more that k 1 footmen standing successively one after another, or there are strictly more than k 2 horsemen standing successively one after another. Find the number of beautiful arrangements of the soldiers.
+
+Note that all n 1 + n 2 warriors should be present at each arrangement. All footmen are considered indistinguishable among themselves. Similarly, all horsemen are considered indistinguishable among themselves.
+
+Input
+The only line contains four space-separated integers n 1, n 2, k 1, k 2 (1 ≤ n 1, n 2 ≤ 100, 1 ≤ k 1, k 2 ≤ 10) which represent how many footmen and horsemen there are and the largest acceptable number of footmen and horsemen standing in succession, correspondingly.
+
+Output
+Print the number of beautiful arrangements of the army modulo 100000000 (108). That is, print the number of such ways to line up the soldiers, that no more than k 1 footmen stand successively, and no more than k 2 horsemen stand successively.
+
+Examples
+inputCopy
+2 1 1 10
+outputCopy
+1
+inputCopy
+2 3 1 2
+outputCopy
+5
+inputCopy
+2 4 1 1
+outputCopy
+0
+Note
+Let's mark a footman as 1, and a horseman as 2.
+
+In the first sample the only beautiful line-up is: 121
+
+In the second sample 5 beautiful line-ups exist: 12122, 12212, 21212, 21221, 22121
+
+#include <bits/stdc++.h>
+using namespace std;
+using namespace std;
+
+int k1,k2;
+long long dp[101][101][11][11];
+int help(int n1,int n2,int left_f,int left_h){
+    if(n1+n2==0) return 1;
+    else{
+            if(dp[n1][n2][left_f][left_h]!=-1) return dp[n1][n2][left_f][left_h];
+            int x,y; x=y=0;
+        //f
+        if(n1>0 && left_f>0)
+        x=help(n1-1,n2,left_f-1,k2);
+
+        //h
+        if(n2>0 && left_h>0)
+        y=help(n1,n2-1,k1,left_h-1);
+
+        return dp[n1][n2][left_f][left_h]=(x+y)%100000000;
+    }
+}
+int main()
+{
+    int n1,n2;
+    cin>>n1>>n2>>k1>>k2;
+    for(int i=0;i<=n1;i++)
+        for(int j=0;j<=n2;j++)
+            for(int k=0;k<=k1;k++)
+                for(int l=0;l<=k2;l++)
+                    dp[i][j][k][l]=-1;
+    cout<<help(n1,n2,k1,k2);
+    return 0;
+}
+
+
